@@ -1,0 +1,33 @@
+{
+  "name": "node-api-framework-lc",
+  "version": "0.0.1",
+  "description": "Node api framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/osenekci/node-api-framework.git"
+  },
+  "keywords": [
+    "node",
+    "api",
+    "framework"
+  ],
+  "author": "ozgursenekci@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/osenekci/node-api-framework/issues"
+  },
+  "homepage": "https://github.com/osenekci/node-api-framework#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0"
+  },
+  "dependencies": {
+    "node-libs-lc": "0.0.2",
+    "node-utils-lc": "0.0.2",
+    "restify": "^8.5.1"
+  }
+}
