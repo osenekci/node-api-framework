@@ -1,6 +1,6 @@
 {
   "name": "node-api-framework-lc",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Node api framework",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "eslint-config-google": "^0.14.0"
   },
   "dependencies": {
-    "node-libs-lc": "0.0.2",
+    "node-libs-lc": "0.0.3",
     "node-utils-lc": "0.0.2",
     "restify": "^8.5.1"
   }
