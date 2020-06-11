@@ -1,6 +1,6 @@
 {
   "name": "node-api-framework-lc",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Node api framework",
   "main": "index.js",
   "scripts": {
