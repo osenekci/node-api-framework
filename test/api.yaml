@@ -1,0 +1,122 @@
+openapi: 3.0.0
+servers:
+  - url: //api.hotpepper.live/api/v1/
+    description: Default server
+info:
+  description: None
+  version: 1.0.0
+  title: Hotpepper APIs
+  termsOfService: 'https://hotpepper.live/terms/'
+  contact:
+    name: API Support
+    email: hotpepperlive@gmail.com
+    url: https://hotpepper.live/support
+tags:
+  - name: Schedule
+    description: Schedule management
+
+paths:
+  /test:
+    get:
+      tags:
+        - event
+      summary: Summary
+      description: Description
+      operationId: ops ID
+      x-action: TestController@test
+      x-middleware:
+        - TestMiddleware
+      parameters:
+        - name: test
+          in: query
+          schema:
+            type: string
+            x-validate:
+              - noEmpty
+        - name: test2
+          in: query
+          schema:
+            type: string
+            x-validate:
+              - email
+              - between:
+                  - 3
+                  - 20
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+
+  /pathTest/{var1}:
+    get:
+      tags:
+        - test
+      summary: test
+      description: Description
+      operationId: ops ID2
+      x-action: TestController@test
+      parameters:
+        - name: var1
+          in: path
+          required: true
+          schema:
+            type: string
+            x-validate:
+              - noEmpty
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+
+  /bodyTest:
+    post:
+      tags:
+        - test
+      summary: test
+      description: Description
+      operationId: ops ID3
+      x-action: TestController@test
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyTest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+
+components:
+  schemas:
+    Subscription:
+      type: object
+      properties:
+        name:
+          type: string
+          x-validate:
+            - noEmpty
+    BodyTest:
+      type: object
+      properties:
+        id:
+          type: string
+          x-validate:
+            - int
+        name:
+          type: string
+        email:
+          type: string
+          x-validate:
+            - email
+        subscription:
+          type: object
+          $ref: '#/components/schemas/Subscription'
