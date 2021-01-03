@@ -1,4 +1,4 @@
-const HttpBase = require('../../lib/http/HttpBase');
+const HttpBase = require('../../src/http/HttpBase');
 
 class TestMiddleware extends HttpBase {
   execute() {

@@ -2,7 +2,7 @@
 ### Example server.js
 ```js
 const Config = require('node-libs-lc').Config;
-const ApiServer = require('./lib/ApiServer');
+const ApiServer = require('./src/ApiServer');
 const EnvUtils = require('node-utils-lc').EnvUtils;
 const path = require('path');
 const basePath = __dirname;

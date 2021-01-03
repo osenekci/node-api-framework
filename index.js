@@ -1,7 +1,7 @@
-const ApiResponse = require('./lib/http/ApiResponse');
-const HttpBase = require('./lib/http/HttpBase');
-const ApiServer = require('./lib/ApiServer');
-const OpenApiProcessor = require('./lib/OpenApiProcessor');
+const ApiResponse = require('./src/http/ApiResponse');
+const HttpBase = require('./src/http/HttpBase');
+const ApiServer = require('./src/ApiServer');
+const OpenApiProcessor = require('./src/lib/OpenApiProcessor');
 
 module.exports = {
   ApiResponse: ApiResponse,

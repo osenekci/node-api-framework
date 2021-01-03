@@ -3,8 +3,7 @@ const path = require('path');
 const {promisify} = require('util');
 const fs = require('fs');
 const _ = require('lodash');
-const Store = require('node-libs-lc').Store;
-const Logger = require('node-libs-lc').Logger;
+const Logger = require('node-logger-lc');
 
 /**
  * Http server
@@ -12,7 +11,7 @@ const Logger = require('node-libs-lc').Logger;
 class ApiServer {
   /**
    * @param {Object} routes
-   * @param {{
+   * @type {{
    *   port:number,
    *   logger:{
    *     level:string,
@@ -29,12 +28,13 @@ class ApiServer {
    *     middleware:string,
    *   }
    * }} config
+   * @param {Config} config
    */
   constructor(routes, config) {
     this._routes = routes;
     this._config = config;
-    this._logger = new Logger(config.logger);
-    this._paths = config.paths;
+    this._logger = new Logger(config.get('app.logger'));
+    this._paths = config.get('app.paths');
     this._store = null;
     this._cache = {
       controller: {},
@@ -54,7 +54,7 @@ class ApiServer {
    * @param {string} middlewareName
    * @param {Request} req
    * @param {Object} route
-   * @param {Store} store
+   * @param {Map} store
    * @return {Promise<ApiResponse|undefined>}
    * @private
    */
@@ -63,7 +63,7 @@ class ApiServer {
     const middleware = new Middleware(this._config, this._logger, route);
     middleware.attachRequestStore(store);
     if (this._store) {
-      middleware.attachDefaultStore(this._store);
+      middleware.attachGlobalStore(this._store);
     }
     await middleware.beforeExecute();
     return middleware.execute(req);
@@ -74,7 +74,7 @@ class ApiServer {
    * @param {string} method
    * @param {Request} req
    * @param {Object} route
-   * @param {Store} store
+   * @param {Map} store
    * @return {Promise<ApiResponse>}
    * @private
    */
@@ -83,7 +83,7 @@ class ApiServer {
     const controller = new Controller(this._config, this._logger, route);
     controller.attachRequestStore(store);
     if (this._store) {
-      controller.attachDefaultStore(this._store);
+      controller.attachGlobalStore(this._store);
     }
     await controller.beforeExecute();
     return controller[method](req);
@@ -108,8 +108,8 @@ class ApiServer {
   _registerRoutes(routes) {
     routes.forEach((route) => {
       this._server[route.requestMethod](route.path, async (req, res) => {
-        const requestStore = new Store();
-        if (this._config.silent !== true) {
+        const requestStore = new Map();
+        if (this._config.get('app.silent') !== true) {
           await this._executeMiddleware(
               ApiServer.coreMiddlewares.logger, req, route, requestStore);
         }
@@ -118,7 +118,7 @@ class ApiServer {
          * @type {ApiResponse}
          */
         let response;
-        if (this._config.validation && this._config.validation.enabled) {
+        if (this._config.get('validation.enabled')) {
           response = await this._executeMiddleware(
               ApiServer.coreMiddlewares.validator, req, route, requestStore);
         }
@@ -191,7 +191,7 @@ class ApiServer {
   }
 
   /**
-   * @param {Store} store
+   * @param {Map} store
    */
   attachStore(store) {
     this._store = store;
@@ -215,7 +215,7 @@ class ApiServer {
     await this._cacheMiddlewareStack();
     await this._cacheControllers();
     this._registerRoutes(this._routes);
-    const port = this._config.port;
+    const port = this._config.get('app.port');
     await this._server.listen(port);
     this._logger.info(`Server is up and ready on port ${port}`);
   }

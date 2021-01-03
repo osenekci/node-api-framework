@@ -1,6 +1,6 @@
 const HttpBase = require('../http/HttpBase');
 const ApiResponse = require('../http/ApiResponse');
-const Validator = require('node-libs-lc').Validator;
+const Validator = require('../lib/Validator');
 const _ = require('lodash');
 
 /**
@@ -31,10 +31,10 @@ class ValidatorMiddleware extends HttpBase {
    * @private
    */
   _createErrorMessage(ruleName, ...params) {
-    if (_.isUndefined(this.config.validation.templates)) {
+    const templates = this.config.get('validation.templates');
+    if (_.isUndefined(templates)) {
       return ruleName;
     }
-    const templates = this.config.validation.templates;
     if (_.isUndefined(templates[ruleName])) {
       return ruleName;
     }
@@ -87,7 +87,6 @@ class ValidatorMiddleware extends HttpBase {
     let errors = [];
     if (schema.type === 'object') {
       if (schema.properties) {
-        console.log(schema.properties);
         Object.keys(schema.properties).forEach((propName) => {
           const prop = schema.properties[propName];
           if (prop.type === 'object') {

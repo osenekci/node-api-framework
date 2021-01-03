@@ -29,16 +29,16 @@ class HttpBase {
   }
 
   /**
-   * @param {Store} store
+   * @param {Map} store
    */
-  attachDefaultStore(store) {
+  attachGlobalStore(store) {
     this.store = store;
   }
 
   /**
    * Attach request based temporary store to
    * share data between middleware and controller
-   * @param {Store} store
+   * @param {Map} store
    */
   attachRequestStore(store) {
     this.requestStore = store;

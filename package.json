@@ -1,10 +1,10 @@
 {
   "name": "node-api-framework-lc",
-  "version": "0.0.15",
+  "version": "1.0.0",
   "description": "Node api framework",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \\\"Error: no example specified\\\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -27,8 +27,8 @@
   },
   "dependencies": {
     "lodash": "^4.17.15",
-    "node-libs-lc": "0.0.7",
-    "node-utils-lc": "0.0.7",
+    "node-config-lc": "^1.0.0",
+    "node-logger-lc": "^1.0.0",
     "restify": "8.5.1",
     "swagger-parser": "^9.0.1"
   }

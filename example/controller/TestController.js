@@ -1,5 +1,5 @@
-const HttpBase = require('../../lib/http/HttpBase');
-const ApiResponse = require('../../lib/http/ApiResponse');
+const HttpBase = require('../../src/http/HttpBase');
+const ApiResponse = require('../../src/http/ApiResponse');
 
 class TestController extends HttpBase {
   test() {
