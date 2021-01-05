@@ -13,11 +13,6 @@ class ApiServer {
    * @param {Object} routes
    * @type {{
    *   port:number,
-   *   logger:{
-   *     level:string,
-   *     mode:string,
-   *     file:?string
-   *   },
    *   silent:?boolean,
    *   validation:?{
    *     enabled:boolean,
@@ -29,11 +24,15 @@ class ApiServer {
    *   }
    * }} config
    * @param {Config} config
+   * @param {Logger} logger
    */
-  constructor(routes, config) {
+  constructor(routes, config, logger) {
+    if (!(logger instanceof Logger)) {
+      throw new Error('Missing or invalid logger.');
+    }
     this._routes = routes;
     this._config = config;
-    this._logger = new Logger(config.get('app.logger'));
+    this._logger = logger;
     this._paths = config.get('app.paths');
     this._store = null;
     this._cache = {
