@@ -141,7 +141,10 @@ class ApiServer {
         }
         res.status(response.getStatusCode());
         if (response.isTextFormat()) {
-          res.send(response.buildResponse());
+          const disableSchema = this._config
+              .get('app.disableResponseDecoration', false);
+          const body = response.buildResponse(disableSchema);
+          res.send(body ? body : '');
         }
       });
     });

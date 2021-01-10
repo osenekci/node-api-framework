@@ -5,15 +5,13 @@ class ApiResponse {
   /**
    * @param {string} type
    * @param {number} statusCode
-   * @param {Object|*} payload
-   * @param {boolean} [emptyBody]
+   * @param {Object|*} [payload]
    */
-  constructor(type, statusCode, payload, emptyBody) {
+  constructor(type, statusCode, payload) {
     this._type = type;
     this._headers = {};
     this._statusCode = statusCode;
     this._payload = payload;
-    this._emptyBody = emptyBody;
     if (type === ApiResponse.TYPES.JSON) {
       this.addHeader('Content-Type', 'application/json');
     } else if (type === ApiResponse.TYPES.TEXT) {
@@ -60,11 +58,16 @@ class ApiResponse {
    *   payload:?*
    * }} Response
    *
+   * @param {boolean} [disableSchema]
    * @return {Response|string}
    */
-  buildResponse() {
-    if (this._emptyBody) {
-      return undefined;
+  buildResponse(disableSchema) {
+    if (!this._payload) {
+      return null;
+    }
+    // disableSchema default is true
+    if (disableSchema === true) {
+      return this._payload;
     }
     const response = {};
     response.success = this._statusCode >= 200 && this._statusCode < 300;
@@ -176,7 +179,7 @@ class ApiResponse {
     if (emptyBody) {
       type = ApiResponse.TYPES.TEXT;
     }
-    return new ApiResponse(type, statusCode, payload, emptyBody);
+    return new ApiResponse(type, statusCode, payload);
   }
 }
 
