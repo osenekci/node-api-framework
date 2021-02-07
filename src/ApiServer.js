@@ -4,6 +4,7 @@ const {promisify} = require('util');
 const fs = require('fs');
 const _ = require('lodash');
 const Logger = require('node-logger-lc');
+const EventBus = require('./lib/EventBus');
 
 /**
  * Http server
@@ -30,6 +31,7 @@ class ApiServer {
     if (!(logger instanceof Logger)) {
       throw new Error('Missing or invalid logger.');
     }
+    this._eventBus = new EventBus();
     this._routes = routes;
     this._config = config;
     this._logger = logger;
@@ -38,6 +40,7 @@ class ApiServer {
     this._cache = {
       controller: {},
       middleware: {},
+      globalMiddleware: {},
     };
   }
 
@@ -60,6 +63,7 @@ class ApiServer {
   async _executeMiddleware(middlewareName, req, route, store) {
     const Middleware = this._cache.middleware[middlewareName];
     const middleware = new Middleware(this._config, this._logger, route);
+    middleware.setEventBus(this._eventBus);
     middleware.attachRequestStore(store);
     if (this._store) {
       middleware.attachGlobalStore(this._store);
@@ -80,6 +84,7 @@ class ApiServer {
   async _executeController(controllerName, method, req, route, store) {
     const Controller = this._cache.controller[controllerName];
     const controller = new Controller(this._config, this._logger, route);
+    controller.setEventBus(this._eventBus);
     controller.attachRequestStore(store);
     if (this._store) {
       controller.attachGlobalStore(this._store);
@@ -112,7 +117,8 @@ class ApiServer {
           await this._executeMiddleware(
               ApiServer.coreMiddlewares.logger, req, route, requestStore);
         }
-        const middlewareStack = route.middleware || [];
+        let middlewareStack = [...(Object.keys(this._cache.globalMiddleware))];
+        middlewareStack = middlewareStack.concat(route.middleware);
         /**
          * @type {ApiResponse}
          */
@@ -203,8 +209,16 @@ class ApiServer {
    * @param {string} name
    * @param {HttpBase} middlewareObj
    */
-  attachMiddleware(name, middlewareObj) {
+  attachGlobalMiddleware(name, middlewareObj) {
+    this._cache.globalMiddleware[name] = middlewareObj;
     this._cache.middleware[name] = middlewareObj;
+  }
+
+  /**
+   * @return {EventBus}
+   */
+  getEventBus() {
+    return this._eventBus;
   }
 
   /**

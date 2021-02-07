@@ -26,6 +26,14 @@ class HttpBase {
     this.route = route;
     this.store = null;
     this.requestStore = null;
+    this.eventBus = null;
+  }
+
+  /**
+   * @param {EventBus} eventBus
+   */
+  setEventBus(eventBus) {
+    this.eventBus = eventBus;
   }
 
   /**

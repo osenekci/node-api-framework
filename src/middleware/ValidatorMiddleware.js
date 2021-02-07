@@ -112,7 +112,7 @@ class ValidatorMiddleware extends HttpBase {
    * @param {Request} req
    * @return {ApiResponse|undefined}
    */
-  execute(req) {
+  async execute(req) {
     const params = this.route.parameters;
     let failedFields = [];
     params.forEach((param) => {
@@ -141,6 +141,11 @@ class ValidatorMiddleware extends HttpBase {
       }
     }
     if (failedFields.length > 0) {
+      const value = await this.eventBus
+          .emit('VALIDATION_RESPONSE', failedFields);
+      if (value) {
+        return ApiResponse.badRequest(value);
+      }
       return ApiResponse.badRequest(failedFields);
     }
   }
